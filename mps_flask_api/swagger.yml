@@ -18,6 +18,35 @@ components:
           type: "string"
         user_id:
           type: "string"
+    Edit_user:
+      type: "object"
+      properties:
+        user_name:
+          type: "string"
+    Event:
+      type: "object"
+      required:
+        - event_id
+      properties:
+        event_id:
+          type: "string"
+        event_name:
+          type: "string"
+        event_date:
+          type: "string"
+        user_id:
+          type: "string"
+        event_desc:
+          type: "string"
+    Edit_event:
+      type: "object"
+      properties:
+        event_name:
+          type: "string"
+        event_date:
+          type: "string"
+        event_desc:
+          type: "string"
   parameters:
     user_id:
       name: "user_id"
@@ -26,9 +55,15 @@ components:
       required: True
       schema:
         type: "string"
-
+    event_id:
+      name: "event_id"
+      description: "ID of the event to get"
+      in: path
+      required: true
+      schema:
+        type: "string"
 paths:
-  /user:
+  /users:
     get:
       operationId: "user.read_all"
       tags:
@@ -53,8 +88,7 @@ paths:
       responses:
         "201":
           description: "Sucessfully created user"
-
-  /user/{user_id}:
+  /users/{user_id}:
     get:
       operationId: "user.read_one"
       tags:
@@ -64,9 +98,8 @@ paths:
         - $ref: "#/components/parameters/user_id"
       responses:
         "200":
-          description: "Successfully read user"
-
-    put:
+          description: "Sucessfully read user"
+    patch:
       tags:
         - "User"
       operationId: "user.update"
@@ -81,8 +114,7 @@ paths:
           application/json:
             schema:
               x-body-name: "user"
-              $ref: "#/components/schemas/User"
-
+              $ref: "#/components/schemas/Edit_user"
     delete:
       tags:
         - "User"
@@ -93,6 +125,65 @@ paths:
       responses:
         "204":
           description: "Successfully deleted user"
-
-
-
+  /events:
+    get:
+      operationId: "event.read_all"
+      tags:
+        - "Events"
+      summary: "Read the list of events"
+      responses:
+        "200":
+          description: "Sucessfully read events list"
+    post:
+      operationId: "event.create"
+      tags:
+        - "Events"
+      summary: "Create a new event"
+      requestBody:
+        description: "Event to create"
+        required: true
+        content:
+          application/json:
+            schema:
+              x-body-name: "event"
+              $ref: "#/components/schemas/Event"
+      responses:
+        "201":
+          description: "Sucessfully created event"
+  /events/{event_id}:
+    get:
+      operationId: "event.read_one"
+      tags:
+        - "Events"
+      summary: "Read one event"
+      parameters:
+        - $ref: "#/components/parameters/event_id"
+      responses:
+        "200":
+          description: "Sucessfully read event"
+    patch:
+      tags:
+        - "Events"
+      operationId: "event.update"
+      summary: "Update a event"
+      parameters:
+        - $ref: "#/components/parameters/event_id"
+      responses:
+        "200":
+          description: "Successfully updated event"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              x-body-name: "event"
+              $ref: "#/components/schemas/Edit_event"
+    delete:
+      tags:
+        - "Events"
+      operationId: "event.delete"
+      summary: "Delete a event"
+      parameters:
+        - $ref: "#/components/parameters/event_id"
+      responses:
+        "204":
+          description: "Successfully deleted event"
